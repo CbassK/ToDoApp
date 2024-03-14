@@ -1,0 +1,21 @@
+{% extends "app/base.html" %}
+{% block content %}
+
+<div class="py-4 px-4 border border-blue-500 rounded-lg max-w-screen-sm mx-auto">
+    <h1 class="text-center text-3xl mb-6">Login</h1>
+    <form method="POST" class="flex flex-col">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="username" class="block">Username</label>
+            <input type="text" name="username" id="username" class="border border-gray-300 rounded-lg px-4 py-2 w-full" placeholder="Enter username...">
+        </div>
+        <div class="mb-4">
+            <label for="password" class="block">Password</label>
+            <input type="password" name="password" id="password" class="border border-gray-300 rounded-lg px-4 py-2 w-full" placeholder="Enter password...">
+        </div>
+        <input type="submit" value="Login" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded justify-end">
+    </form>
+    <p class="text-center mt-4">Don't have an account? <a href="{% url 'register' %}" class="text-blue-500 hover:underline">Register</a></p>
+</div>
+
+{%endblock content%}

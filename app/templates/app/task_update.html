@@ -1,0 +1,40 @@
+{% extends "app/base.html" %}
+{% block content %}
+
+<div class="rounded-lg overflow-hidden">
+    <div class="text-white text-xl bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 px-4 py-4">
+        <a href="{% url 'tasks' %}" class="inline-block">&#x21a9; Go Back</a>
+    </div>
+    <div class="py-4 px-4 border border-blue-500">
+        <form method="POST" action="" class="flex flex-col">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block">Title</label>
+                {% if task.title %}
+                    <input type="text" name="title" value="{{ task.title }}" class="border border-gray-300 rounded-lg px-4 py-2 w-full">
+                {% else %}
+                    <input type="text" name="title" class="border border-gray-300 rounded-lg px-4 py-2 w-full" placeholder="Enter title...">
+                {% endif %}
+            </div>
+            <div class="mb-4">
+                <label class="block">Description</label>
+                {% if task.description %}
+                    <textarea name="description" class="border border-gray-300 rounded-lg px-4 py-2 w-full">{{ task.description }}</textarea>
+                {% else %}
+                    <textarea name="description" class="border border-gray-300 rounded-lg px-4 py-2 w-full" placeholder="Enter description..."></textarea>
+                {% endif %}
+            </div>
+            <div class="mb-4 flex items-center">
+                <label for="complete">Complete</label>
+                {% if task.complete %}
+                    <input type="checkbox" id="complete" name="complete" class="ml-2" checked>
+                {% else %}
+                    <input type="checkbox" id="complete" name="complete" class="ml-2">
+                {% endif %}
+            </div>
+            <input type="submit" value="Submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

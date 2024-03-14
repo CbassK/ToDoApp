@@ -1,0 +1,24 @@
+{% extends "app/base.html" %}
+{% block content %}
+
+<div class="rounded-lg overflow-hidden">
+    <div class="text-white text-xl bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 px-4 py-4">
+        <a href="{% url 'tasks' %}">&#x21a9; Go Back</a>
+    </div>
+    <div class="py-4 px-4 border border-blue-500">
+        <form method="POST" action="" class="flex flex-col">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block">Title</label>
+                <input type="text" name="title" class="border border-gray-300 rounded-lg px-4 py-2 w-full" placeholder="Enter title...">
+            </div>
+            <div class="mb-4">
+                <label class="block">Description</label>
+                <textarea name="description" class="border border-gray-300 rounded-lg px-4 py-2 w-full" placeholder="Enter description..."></textarea>
+            </div>
+            <input type="submit" value="Submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        </form>
+    </div>
+</div>
+
+{% endblock content%}

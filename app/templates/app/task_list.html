@@ -1,0 +1,84 @@
+{% extends "app/base.html" %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+{% if request.user.is_authenticated %}
+
+<div class="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500">
+    <div class="flex justify-between items-center px-4 py-2">
+        <h1 class="text-white text-4xl">Hello {{ request.user|title }}</h1>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-transparent px-4 py-2 hover:text-yellow-400">logout</button>
+        </form>
+    </div>
+    <h3 class="text-white text-2xl px-4 py-2">You have <span>{{ count }}</span> incomplete task{{ count|pluralize:"s" }}</h3>
+</div>
+
+<div class="flex justify-between py-6">
+    <div class="flex">
+        <form method="GET">
+            <input type="text" name="search-area" class="border-4 rounded-lg border-sky-500 mr-2 ml-4">
+            <input type="submit" value="search" class="border-4 rounded-lg border-sky-500 text-sky-500 hover:text-white bg-transparent hover:bg-sky-500 px-4 py-2 transition-colors duration-300">
+        </form>
+    </div>
+    <div>
+        <a href="{% url 'task-create' %}" class="text-5xl text-sky-500 px-4" title="Add">&#x2b;</a>
+    </div>
+</div>
+
+<form style="display: none;" id="reorderForm" method="post" action="{% url 'task-reorder' %}">
+    {% csrf_token %}
+    <input type="hidden" id="positionInput" name="position">
+</form>
+
+<div id="tasklist" class="container">
+    {% for task in tasks %}
+        <div class="bg-gradient-to-r from-sky-200 via-blue-300 to-indigo-300 task-item border-2 border-sky-300 rounded-lg p-4 mt-4 flex items-center justify-between task-wrapper" data-position="{{task.pk}}">
+            <a href="{% url 'task-update' task.id %}" class=" text-2xl text-blue-500 hover:text-blue-700 mr-2">
+                {% if task.complete %}
+                    <span>&#x2714;</span>
+                {% endif %}
+                {{ task.title }}
+            </a>
+            <div>
+                <a href="{% url 'task-delete' task.id %}" class="text-3xl text-red-500 hover:text-red-700" title="Delete">&#x2718;</a>
+                <span class="text-3xl text-red-500 hover:text-red-700 cursor-pointer handle" title="Move">&#x21d5;</span>
+            </div>
+        </div>
+
+    {% empty %}
+        <div class="flex justify-center text-xl text-gray-600">You have no tasks in the list</div>
+    {% endfor %}
+</div>
+
+{% else %}
+<a href="{% url 'login' %}">Login</a>
+{% endif %}
+
+<script>
+    var taskList = document.getElementById("tasklist");
+    var reorderForm = document.getElementById("reorderForm");
+    var positionInput = document.getElementById("positionInput");
+
+    let sortable = Sortable.create(taskList, {
+        handle: '.handle',
+        ghostClass: 'dropArea',
+        chosenClass: 'selectedTask',
+
+    });
+
+    function reordering() {
+        const rows = document.getElementsByClassName("task-wrapper");
+        let pos = [];
+        for (let row of rows) {
+            pos.push(row.dataset.position);
+        }
+        console.log(pos.join(","))
+        positionInput.value = pos.join(',');
+        reorderForm.submit();
+    }
+
+    document.ondrop = reordering
+</script>
+
+{% endblock content %}
